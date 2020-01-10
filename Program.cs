@@ -70,9 +70,14 @@ namespace umipro_fancontroller
                 var temp = ReadIntValue(tempSensorFile);
                 var fan1rpm = GetFanSpeed(fan1Base, fan1Max, baseTemp, maxTemp, temp);
                 var fan2rpm = GetFanSpeed(fan2Base, fan2Max, baseTemp, maxTemp, temp);
-                WriteValue(fan1OutputPath, fan1rpm);
-                WriteValue(fan2OutputPath, fan2rpm);
                 Console.WriteLine($"T:{temp} F1:{fan1rpm} F2:{fan2rpm}");
+                try {
+                    WriteValue(fan1OutputPath, fan1rpm);
+                    WriteValue(fan2OutputPath, fan2rpm);
+                }
+                catch (IOException exception) {
+                    Console.WriteLine($"[Error] Setting fan value failed with exception message: {exception.Message} ({exception.HResult})");
+                }
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
         }
