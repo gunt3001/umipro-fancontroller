@@ -61,15 +61,17 @@ namespace umipro_fancontroller
             Console.WriteLine("Starting monitoring...");
 
             Console.WriteLine("Enabling manual fan control");
-            WriteValue("fan1_manual", 1);
-            WriteValue("fan2_manual", 1);      
+            WriteValue(Path.Combine(SensorsPath, "fan1_manual"), 1);
+            WriteValue(Path.Combine(SensorsPath, "fan2_manual"), 1);      
 
+            var fan1OutputPath = Path.Combine(SensorsPath, "fan1_output");
+            var fan2OutputPath = Path.Combine(SensorsPath, "fan2_output");
             while (true) {
                 var temp = ReadIntValue(tempSensorFile);
                 var fan1rpm = GetFanSpeed(fan1Base, fan1Max, baseTemp, maxTemp, temp);
                 var fan2rpm = GetFanSpeed(fan2Base, fan2Max, baseTemp, maxTemp, temp);
-                WriteValue("fan1_output", fan1rpm);
-                WriteValue("fan2_output", fan2rpm);
+                WriteValue(fan1OutputPath, fan1rpm);
+                WriteValue(fan2OutputPath, fan2rpm);
                 Console.WriteLine($"T:{temp} F1:{fan1rpm} F2:{fan2rpm}");
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
